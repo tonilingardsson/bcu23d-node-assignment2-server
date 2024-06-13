@@ -5,6 +5,7 @@
   "main": "server.mjs",
   "scripts": {
     "test": "vitest",
+    "test:ui": "vitest --ui",
     "start": "node --env-file=config/config.env server.mjs",
     "dev": "nodemon --env-file=config/config.env server.mjs 5000 http://localhost:5000",
     "node1": "nodemon --env-file=config/config.env server.mjs 5001 http://localhost:5001",
