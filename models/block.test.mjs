@@ -19,22 +19,19 @@ describe('Block', () => {
         data: data,
     });
 
-    describe('Block', () => {
-        it('should have the properties: timestamp, lastHash, hash, data', () => {
-            expect(block).toHaveProperty('timestamp');
-            expect(block).toHaveProperty('lastHash');
-            expect(block).toHaveProperty('hash');
-            expect(block).toHaveProperty('data');
-        });
+    it('should have the properties: timestamp, lastHash, hash, data', () => {
+        expect(block).toHaveProperty('timestamp');
+        expect(block).toHaveProperty('lastHash');
+        expect(block).toHaveProperty('hash');
+        expect(block).toHaveProperty('data');
     });
-    describe('should have values for the properties', () => {
-        it('second ', () => {
-            expect(block.timestamp).toEqual(timestamp);
-            expect(block.lastHash).toEqual(lastHash);
-            expect(block.hash).toEqual(hash);
-            expect(block.data).toEqual(data);
 
-        });
+    it('should have values for the properties', () => {
+        expect(block.timestamp).toEqual(timestamp);
+        expect(block.lastHash).toEqual(lastHash);
+        expect(block.hash).toEqual(hash);
+        expect(block.data).toEqual(data);
+
     });
 
     describe('Genesis Block', () => {
