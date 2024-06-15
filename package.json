@@ -1,5 +1,5 @@
 {
-  "name": "assignments",
+  "name": "Final Individual NODE JS assignment for BCU23D at MedieInstitutet",
   "version": "1.0.0",
   "description": "This is the final NODE JS assignment where we have to create a complete Blockchain application for my own cryptocurrency with transaction management and validation, using MongoDB and Pubnub. For the client side I will use React.",
   "main": "server.mjs",
