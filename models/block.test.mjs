@@ -35,4 +35,12 @@ describe('Block', () => {
 
         });
     });
-});
+
+    describe('Genesis Block', () => {
+        const genesis = Block.genesis;
+
+        it('should return an instance of Block class', () => {
+            expect(genesis).toBeInstanceOf(Block);
+        });
+    })
+})
