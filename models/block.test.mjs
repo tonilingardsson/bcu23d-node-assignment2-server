@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import Block from './Block.mjs';
+import { GENESIS_DATA } from '../config/settings.mjs';
 
 describe('Block', () => {
     const timestamp = Date.now();
@@ -41,6 +42,10 @@ describe('Block', () => {
 
         it('should return an instance of Block class', () => {
             expect(genesis).toBeInstanceOf(Block);
+        });
+
+        it('should return the genesis data', () => {
+            expect(genesis).toEqual(GENESIS_DATA);
         });
     })
 })

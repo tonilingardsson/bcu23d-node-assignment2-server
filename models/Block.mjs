@@ -1,3 +1,5 @@
+import { GENESIS_DATA } from "../config/settings.mjs";
+
 export default class Block {
     constructor({ timestamp, lastHash, hash, data }) {
         this.timestamp = timestamp;
@@ -8,11 +10,6 @@ export default class Block {
 
     // Creating a GETTER, a property
     static get genesis() {
-        return new this({
-            timestamp: 'genesis time',
-            lastHash: '0',
-            hash: '0',
-            data: 'genesis data',
-        });
+        return new this(GENESIS_DATA);
     }
 }
