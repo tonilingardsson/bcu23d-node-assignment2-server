@@ -29,5 +29,43 @@ describe('Blockchain', () => {
         const data = 'demo block';
         blockchain.addBlock({ data: data });
         expect(blockchain.chain.at(-1).data).toEqual(data);
+    });
+
+    describe('Validate chain', () => {
+        // Step 1. Validate the genesis block
+        describe('when the chain does not start with the correct genesis block', () => {
+            it('should return false', () => {
+                blockchain.chain[0] = { data: 'Fake genesis!' };
+                expect(Blockchain.validateChain(blockchain.chain)).toBe(false);
+            })
+        })
+        // Step 2. Validate the blockchain, which has the correct genesis block, and all other blocks.
+        describe('when the chain start with the correct genesis and has multiple blocks', () => {
+            beforeEach(() => {
+                blockchain.addBlock({ data: 'Web Development' });
+                blockchain.addBlock({ data: 'Mobile Development' });
+                blockchain.addBlock({ data: 'Cloud Development' });
+            })
+
+            describe('and one of the blocks lastHash has changed', () => {
+                it('should return false', () => {
+                    blockchain.chain[1].lastHash = 'broken-lastHash';
+                    expect(Blockchain.validateChain(blockchain.chain)).toBe(false);
+                })
+            })
+
+            describe('and one of the blocks data has changed. It is not valid.', () => {
+                it('should return false', () => {
+                    blockchain.chain[2].data = 'broken-data';
+                    expect(Blockchain.validateChain(blockchain.chain)).toBe(false);
+                })
+            })
+            // Step 3. In case any of the existing blocks is invalid, return false.
+            describe('and the chain is valid', () => {
+                it('should return true', () => {
+                    expect(Blockchain.validateChain(blockchain.chain)).toBe(true);
+                })
+            })
+        })
     })
 })
