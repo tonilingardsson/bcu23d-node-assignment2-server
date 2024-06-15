@@ -1,3 +1,4 @@
+import hexToBinary from 'hex-to-binary';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createHash } from '../utilities/crypto-lib.mjs';
 import Block from '../models/Block.mjs';
@@ -85,7 +86,7 @@ describe('Block', () => {
         });
 
         it('should produce a hash that matches the difficulty level', () => {
-            expect(minedBlock.hash.substring(0, minedBlock.difficulty)).toEqual(
+            expect(hexToBinary(minedBlock.hash).substring(0, minedBlock.difficulty)).toEqual(
                 '0'.repeat(minedBlock.difficulty)
             );
         });

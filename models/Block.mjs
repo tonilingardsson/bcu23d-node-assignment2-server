@@ -1,3 +1,4 @@
+import hexToBinary from "hex-to-binary";
 import { GENESIS_DATA, MINE_RATE } from "../config/settings.mjs";
 import { createHash } from "../utilities/crypto-lib.mjs";
 
@@ -18,7 +19,7 @@ export default class Block {
 
     static mineBlock({ lastBlock, data }) {
         const lastHash = lastBlock.hash;
-        const { difficulty } = lastBlock;
+        let { difficulty } = lastBlock;
 
         let hash, timestamp;
         let nonce = 0;
@@ -26,8 +27,9 @@ export default class Block {
         do {
             nonce++;
             timestamp = Date.now();
+            difficulty = Block.adjustDifficultyLevel({ block: lastBlock, timestamp });
             hash = createHash(timestamp, lastHash, data, nonce, difficulty);
-        } while (hash.substring(0, difficulty) !== '0'.repeat(difficulty));
+        } while (hexToBinary(hash).substring(0, difficulty) !== '0'.repeat(difficulty));
 
 
 
