@@ -33,13 +33,13 @@ export default class Blockchain {
             return false;
 
         for (let i = 1; i < chain.length; i++) {
-            const { timestamp, hash, lastHash, data } = chain.at(i);
+            const { timestamp, hash, lastHash, data, nonce, difficulty } = chain.at(i);
             const currentLastHash = chain[i - 1].hash;
             // Rule 2. Last block's hash must match the current block's lastHash.
             if (lastHash !== currentLastHash) return false;
 
             // Rule 3. Check that the block's data is valid.
-            const validHash = createHash(timestamp, lastHash, data);
+            const validHash = createHash(timestamp, lastHash, data, nonce, difficulty);
             if (hash !== validHash) return false;
         }
         return true;
