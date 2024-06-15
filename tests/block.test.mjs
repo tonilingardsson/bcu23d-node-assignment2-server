@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createHash } from '../utilities/crypto-lib.mjs';
-import Block from './Block.mjs';
+import Block from '../models/Block.mjs';
 import { GENESIS_DATA } from '../config/settings.mjs';
 
 describe('Block', () => {
