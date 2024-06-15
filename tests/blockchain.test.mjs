@@ -24,4 +24,10 @@ describe('Blockchain', () => {
     it('should have the genesis block as the first block in the chain', () => {
         expect(blockchain.chain[0]).toEqual(Block.genesis);
     });
+
+    it('should add a new block to the chain', () => {
+        const data = 'demo block';
+        blockchain.addBlock({ data: data });
+        expect(blockchain.chain.at(-1).data).toEqual(data);
+    })
 })
