@@ -11,9 +11,4 @@ export const mineBlock = (req, res, next) => {
 
     res.status(201).json({ status: 'success', statusCode: 201, data: block });
 
-    pubnubServer.publish({
-        channel: CHANNELS.BLOCKCHAIN,
-        message: JSON.stringify(blockchain.addBlock({ data })),
-    });
-    res.json({ status: 'success', data: 'Block mined successfully' });
 };
