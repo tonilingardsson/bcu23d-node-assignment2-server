@@ -19,8 +19,8 @@ export default class Block {
 
     static mineBlock({ lastBlock, data }) {
         const lastHash = lastBlock.hash;
-        let { difficulty } = lastBlock;
 
+        let { difficulty } = lastBlock;
         let hash, timestamp;
         let nonce = 0;
 

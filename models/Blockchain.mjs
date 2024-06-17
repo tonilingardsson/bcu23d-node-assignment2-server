@@ -14,6 +14,7 @@ export default class Blockchain {
             data: data,
         });
         this.chain.push(newBlock);
+        return newBlock;
     }
 
     replaceChain(chain) {
@@ -35,8 +36,12 @@ export default class Blockchain {
         for (let i = 1; i < chain.length; i++) {
             const { timestamp, hash, lastHash, data, nonce, difficulty } = chain.at(i);
             const currentLastHash = chain[i - 1].hash;
+            const lastDifficulty = chain[i - 1].difficulty;
             // Rule 2. Last block's hash must match the current block's lastHash.
             if (lastHash !== currentLastHash) return false;
+
+            // Protect against difficulty adjustments
+            if (Math.abs(lastDifficulty - difficulty) > 1) return false;
 
             // Rule 3. Check that the block's data is valid.
             const validHash = createHash(timestamp, lastHash, data, nonce, difficulty);
