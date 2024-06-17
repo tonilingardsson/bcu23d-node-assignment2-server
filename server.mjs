@@ -1,7 +1,8 @@
 import express from 'express';
+import dotenv from 'dotenv';
 import Blockchain from './models/Blockchain.mjs';
-import blockRouter from '.routes/block-routes.mjs';
-import blockchainRouter from '.routes/blockchain-routes.mjs';
+import blockRouter from './routes/block-routes.mjs';
+import blockchainRouter from './routes/blockchain-routes.mjs';
 // import cors from 'cors';
 import PubnubServer from './pubnubServer.mjs';
 
