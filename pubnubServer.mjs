@@ -34,7 +34,7 @@ export default class PubnubServer {
                 const { channel, message } = msgObject;
                 // The message is a string. We need to parse it to an object.
                 const msg = JSON.parse(message);
-                console.log(`Message received. Channel: ${channel}. Message: ${msg}.`);
+                console.log(`Message received. Channel: ${channel} Message: ${message}.`);
 
                 // If the message is a block, add it to the blockchain.
                 if (channel === CHANNELS.BLOCKCHAIN) {
