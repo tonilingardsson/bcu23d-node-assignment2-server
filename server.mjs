@@ -1,25 +1,31 @@
 import express from 'express';
-import dotenv from 'dotenv';
 import Blockchain from './models/Blockchain.mjs';
 import blockRouter from './routes/block-routes.mjs';
 import blockchainRouter from './routes/blockchain-routes.mjs';
 // import cors from 'cors';
 import PubnubServer from './pubnubServer.mjs';
+import dotenv from 'dotenv';
+
+dotenv.config({ path: './config/config.env' });
+
+const credentials = {
+    publishKey: process.env.PUBLISH_KEY,
+    subscribeKey: process.env.SUBSCRIBE_KEY,
+    secretKey: process.env.SECRET_KEY,
+    userId: process.env.USER_ID,
+};
 
 export const blockchain = new Blockchain();
 export const pubnubServer = new PubnubServer({
-    publishKey: process.env.PUBNUB_PUBLISH_KEY,
-    subscribeKey: process.env.PUBNUB_SUBSCRIBE_KEY,
-    secretKey: process.env.PUBNUB_SECRET_KEY,
-    blockchain
+    blockchain,
+    credentials: credentials
 });
 
 const app = express();
-// app.use(cors());
 app.use(express.json());
 
-const DEFAULT_PORT = 5000;
-const ROOT_NODE = 'http://localhost:5000';
+const DEFAULT_PORT = 5001;
+const ROOT_NODE = 'http://localhost:${DEFAULT_PORT}';
 
 let NODE_PORT;
 
@@ -28,7 +34,7 @@ setTimeout(() => {
 }, 1000);
 
 app.use('/api/v1/blockchain', blockchainRouter);
-app.use('/api/v1/blocks', blockRouter);
+app.use('/api/v1/block', blockRouter);
 
 const synchronize = async () => {
     const response = await fetch(`${ROOT_NODE}/api/v1/blockchain`);
