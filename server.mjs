@@ -11,7 +11,7 @@ export const pubnubServer = new PubnubServer({
     publishKey: process.env.PUBNUB_PUBLISH_KEY,
     subscribeKey: process.env.PUBNUB_SUBSCRIBE_KEY,
     secretKey: process.env.PUBNUB_SECRET_KEY,
-    blockchain: new Blockchain(),
+    blockchain
 });
 
 const app = express();
@@ -27,8 +27,8 @@ setTimeout(() => {
     pubnubServer.broadcastChain();
 }, 1000);
 
-app.use('/api/blockchain', blockchainRouter);
-app.use('/api/blocks', blockRouter);
+app.use('/api/v1/blockchain', blockchainRouter);
+app.use('/api/v1/blocks', blockRouter);
 
 const synchronize = async () => {
     const response = await fetch(`${ROOT_NODE}/api/v1/blockchain`);
