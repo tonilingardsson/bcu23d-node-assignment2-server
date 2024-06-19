@@ -11,6 +11,7 @@
     "test:ui": "vitest --ui",
     "start": "node --env-file=config/config.env server.mjs",
     "dev": "nodemon --env-file=config/config.env server.mjs 5000 http://localhost:5000",
+    "dev-node": "cross-env GENERATE_NODE_PORT='true' nodemon server.mjs",
     "node1": "nodemon --env-file=config/config.env server.mjs 5001 http://localhost:5001",
     "node2": "nodemon --env-file=config/config.env server.mjs 5002 http://localhost:5002",
     "node3": "nodemon --env-file=config/config.env server.mjs 5003 http://localhost:5003"
