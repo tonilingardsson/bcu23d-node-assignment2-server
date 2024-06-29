@@ -17,15 +17,14 @@ const credentials = {
 
 export const blockchain = new Blockchain();
 export const pubnubServer = new PubnubServer({
-    blockchain,
-    credentials: credentials
+    blockchain, credentials
 });
 
 const app = express();
 app.use(express.json());
 
 const DEFAULT_PORT = 5001;
-const ROOT_NODE = 'http://localhost:${DEFAULT_PORT}';
+const ROOT_NODE = `http://localhost:${DEFAULT_PORT}`;
 
 let NODE_PORT;
 
