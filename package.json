@@ -10,7 +10,7 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "start": "node --env-file=config/config.env server.mjs",
-    "dev": "nodemon --env-file=config/config.env server.mjs 5000 http://localhost:5000",
+    "dev": "nodemon server.mjs",
     "dev-node": "cross-env GENERATE_NODE_PORT='true' nodemon server.mjs"
   },
   "keywords": [
