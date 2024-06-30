@@ -56,4 +56,4 @@ app.listen(PORT, () => {
     if (PORT !== DEFAULT_PORT) {
         synchronize();
     }
-})
+});
