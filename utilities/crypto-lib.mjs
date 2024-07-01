@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { LOADIPHLPAPI } from 'dns';
 import pkg from 'elliptic';
 const { ec } = pkg;
 
@@ -20,5 +21,6 @@ export const ellipticHash = new ec('secp256k1');
 
 export const verifySignature = ({ publicKey, data, signature }) => {
     const key = ellipticHash.keyFromPublic(publicKey, 'hex');
+    console.log(key);
     return key.verify(createHash(data), signature);
 };
