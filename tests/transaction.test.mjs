@@ -13,20 +13,31 @@ describe('Transaction', () => {
         recipient = 'recipient-dummy-address';
         amount = 50;
 
-        transaction = new Transaction({ sender, recipient, amount })
+        transaction = new Transaction({ sender, recipient, amount });
     });
 
     describe('Properties', () => {
         it('should have a property named id', () => {
             expect(transaction).toHaveProperty('id');
-        })
+        });
 
         it('should have a property named outputMap', () => {
             expect(transaction).toHaveProperty('outputMap');
-        })
+        });
 
         it('should have a property named inputMap', () => {
             expect(transaction).toHaveProperty('inputMap');
+        });
+    });
+
+    describe('outputMap()', () => {
+        it('should display the recipients balance', () => {
+            expect(transaction.outputMap[recipient]).toEqual(amount);
+        });
+        it('should display the senders balance', () => {
+            expect(transaction.outputMap[sender.publicKey]).toEqual(
+                sender.balance - amount
+            );
         });
     });
 });
