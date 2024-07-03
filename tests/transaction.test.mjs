@@ -40,4 +40,18 @@ describe('Transaction', () => {
             );
         });
     });
+
+    describe('inputMap', () => {
+        it('should have a property named timestamp', () => {
+            expect(transaction.inputMap).toHaveProperty('timestamp');
+        });
+
+        it('should set the amount to the senders balance', () => {
+            expect(transaction.inputMap.amount).toEqual(sender.balance)
+        });
+
+        it('should set the address value to the senders publicKey', () => {
+            expect(transaction.inputMap.address).toEqual(sender.publicKey)
+        })
+    })
 });

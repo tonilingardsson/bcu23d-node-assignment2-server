@@ -17,5 +17,11 @@ export default class Transaction {
         return outputMap;
     }
 
-    createInputMap({ sender, outputMap }) { }
+    createInputMap({ sender, outputMap }) {
+        return {
+            timestamp: Date.now(),
+            amount: sender.balance,
+            address: sender.publicKey
+        }
+    }
 }
