@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { verifySignature } from '../utilities/crypto-lib.mjs';
+import { Signature } from 'ethers';
 
 export default class Transaction {
     constructor({ sender, recipient, amount }) {
@@ -21,7 +22,8 @@ export default class Transaction {
         return {
             timestamp: Date.now(),
             amount: sender.balance,
-            address: sender.publicKey
+            address: sender.publicKey,
+            signature: sender.sign(outputMap)
         }
     }
 }

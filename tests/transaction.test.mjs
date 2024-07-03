@@ -2,6 +2,7 @@ import { it, describe, expect, beforeEach } from 'vitest';
 import Wallet from '../models/Wallet.mjs';
 import { verifySignature } from '../utilities/crypto-lib.mjs';
 import Transaction from '../models/Transaction.mjs';
+import { Signature } from 'ethers';
 
 describe('Transaction', () => {
     let transaction, sender, recipient, amount;
@@ -52,6 +53,16 @@ describe('Transaction', () => {
 
         it('should set the address value to the senders publicKey', () => {
             expect(transaction.inputMap.address).toEqual(sender.publicKey)
-        })
-    })
+        });
+
+        it('should sign the input', () => {
+            expect(
+                verifySignature({
+                    publicKey: sender.publicKey,
+                    data: transaction.outputMap,
+                    signature: transaction.inputMap.signature,
+                })
+            ).toBe(true);
+        });
+    });
 });
