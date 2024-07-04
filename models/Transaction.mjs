@@ -23,7 +23,27 @@ export default class Transaction {
             timestamp: Date.now(),
             amount: sender.balance,
             address: sender.publicKey,
-            signature: sender.sign(outputMap)
-        }
+            signature: sender.sign(outputMap),
+        };
+    }
+
+    // Static methods...
+    static validate(transaction) {
+        const {
+            inputMap: { address, amount, signature },
+            outputMap,
+        } = transaction;
+        // const {outputMap} = transaction;
+        // const {address, amount, signature} = transaction.inputMap;
+
+        const outputTotal = Object.values(outputMap).reduce((total, amount) =>
+            total + amount
+        );
+
+        if (amount !== outputTotal) return false;
+
+        if (!verifySignature({ publicKey: address, data: outputMap, signature })) return false;
+
+        return true;
     }
 }
