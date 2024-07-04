@@ -6,7 +6,7 @@ export default class Transaction {
     constructor({ sender, recipient, amount }) {
         this.id = uuidv4().replaceAll('-', '');
         this.outputMap = this.createOutputMap({ sender, recipient, amount });
-        this.inputMap = this.createInputMap({ sender, outputMap: this.createOutputMap });
+        this.inputMap = this.createInputMap({ sender, outputMap: this.outputMap });
     }
 
     createOutputMap({ sender, recipient, amount }) {
