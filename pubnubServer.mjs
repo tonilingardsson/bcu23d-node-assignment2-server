@@ -1,7 +1,7 @@
-import Pubnub from "pubnub";
+import Pubnub from 'pubnub';
 import dotenv from 'dotenv';
 
-dotenv.config();
+dotenv.config({ path: './config/config.env' });
 
 const CHANNELS = {
     DEMO: 'DEMO',
@@ -10,18 +10,18 @@ const CHANNELS = {
 
 // I am using a .env file to store the Pubnub credentials.
 const pubnubCredentials = {
-    publishKey: process.env.PUBNUB_PUBLISH_KEY,
-    subscribeKey: process.env.PUBNUB_SUBSCRIBE_KEY,
-    secretKey: process.env.PUBNUB_SECRET_KEY,
-    userId: process.env.PUBNUB_USER_ID
+    publishKey: process.env.PUBLISH_KEY,
+    subscribeKey: process.env.SUBSCRIBE_KEY,
+    secretKey: process.env.SECRET_KEY,
+    userId: process.env.USER_ID
 };
 export default class PubnubServer {
     // This constructor takes in our blockchain as a parameter, object destructuring. 
     // And importing Pubnub.
-    constructor({ publishKey, subscribeKey, secretKey, blockchain }) {
+    constructor({ blockchain, credentials }) {
         this.blockchain = blockchain;
         // This is our Pubnub instance. It will connect the app to the cloud.
-        this.pubnub = new Pubnub(pubnubCredentials);
+        this.pubnub = new Pubnub(credentials);
         // Set up the subscription to our channel. Pubnub makes it easy to create channels.
         this.pubnub.subscribe({ channels: Object.values(CHANNELS) });
         // Listen for messages on our channel. It takes in a callback function.

@@ -9,10 +9,10 @@ import dotenv from 'dotenv';
 dotenv.config({ path: './config/config.env' });
 
 const credentials = {
-    publishKey: process.env.PUBNUB_PUBLISH_KEY,
-    subscribeKey: process.env.PUBNUB_SUBSCRIBE_KEY,
-    secretKey: process.env.PUBNUB_SECRET_KEY,
-    userId: process.env.PUBNUB_USER_ID,
+    publishKey: process.env.PUBLISH_KEY,
+    subscribeKey: process.env.SUBSCRIBE_KEY,
+    secretKey: process.env.SECRET_KEY,
+    userId: process.env.USER_ID,
 };
 
 export const blockchain = new Blockchain();
