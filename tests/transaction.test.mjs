@@ -1,8 +1,7 @@
-import { it, describe, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
+import Transaction from '../models/Transaction.mjs';
 import Wallet from '../models/Wallet.mjs';
 import { verifySignature } from '../utilities/crypto-lib.mjs';
-import Transaction from '../models/Transaction.mjs';
-import { Signature } from 'ethers';
 
 describe('Transaction', () => {
     let transaction, sender, recipient, amount;
@@ -31,7 +30,7 @@ describe('Transaction', () => {
         });
     });
 
-    describe('outputMap()', () => {
+    describe('OutputMap()', () => {
         it('should display the recipients balance', () => {
             expect(transaction.outputMap[recipient]).toEqual(amount);
         });
@@ -42,17 +41,17 @@ describe('Transaction', () => {
         });
     });
 
-    describe('inputMap', () => {
+    describe('InputMap', () => {
         it('should have a property named timestamp', () => {
             expect(transaction.inputMap).toHaveProperty('timestamp');
         });
 
         it('should set the amount to the senders balance', () => {
-            expect(transaction.inputMap.amount).toEqual(sender.balance)
+            expect(transaction.inputMap.amount).toEqual(sender.balance);
         });
 
         it('should set the address value to the senders publicKey', () => {
-            expect(transaction.inputMap.address).toEqual(sender.publicKey)
+            expect(transaction.inputMap.address).toEqual(sender.publicKey);
         });
 
         it('should sign the input', () => {
@@ -66,12 +65,11 @@ describe('Transaction', () => {
         });
     });
 
-    describe('validate the transaction', () => {
+    describe('Validate the transaction', () => {
         describe('when the transaction is valid', () => {
             it('should return true', () => {
                 expect(Transaction.validate(transaction)).toBe(true);
-
-            })
+            });
         });
         describe('when the transaction is invalid', () => {
             describe('and the transaction outputMap is invalid', () => {
@@ -80,13 +78,39 @@ describe('Transaction', () => {
                     expect(Transaction.validate(transaction)).toBe(false);
                 });
             });
-            describe('and the transaction inputMap signature is invalid', () => {
+            describe('and the transaction input signature is invalid', () => {
                 it('should return false', () => {
-                    transaction.inputMap.signature = new Wallet().sign('Bloody wrong signature!');
+                    transaction.inputMap.signature = new Wallet().sign(
+                        'Bloody wrong signature!'
+                    );
                     expect(Transaction.validate(transaction)).toBe(false);
-                })
+                });
             });
+        });
+    });
 
+    describe('Update transaction', () => {
+        let orgSignature, orgSenderOutput, nextRecipient, nextAmount;
+
+        describe('and the amount is invalid. Not enough funds!', () => {
+            it('should throw an error', () => {
+                expect(() => {
+                    transaction.update({ sender, recipient, amount: 1010 })
+                }).toThrow('Not enough funds!');
+            });
+        });
+
+        beforeEach(() => {
+            orgSignature = transaction.inputMap.signature;
+            orgSenderOutput = transaction.outputMap[sender.publicKey];
+            nextAmount = 25;
+            nextRecipient = 'Gustav';
+
+            transaction.update({
+                sender,
+                recipient: nextRecipient,
+                amount: nextAmount
+            });
         });
     });
 });
