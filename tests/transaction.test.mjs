@@ -95,21 +95,50 @@ describe('Transaction', () => {
         describe('and the amount is invalid. Not enough funds!', () => {
             it('should throw an error', () => {
                 expect(() => {
-                    transaction.update({ sender, recipient, amount: 1010 })
+                    transaction.update({ sender, recipient, amount: 1010 });
                 }).toThrow('Not enough funds!');
             });
         });
 
-        beforeEach(() => {
-            orgSignature = transaction.inputMap.signature;
-            orgSenderOutput = transaction.outputMap[sender.publicKey];
-            nextAmount = 25;
-            nextRecipient = 'Gustav';
+        describe('and the amount is valid', () => {
+            beforeEach(() => {
+                transaction.update({ sender, recipient, amount: nextAmount });
+            });
 
-            transaction.update({
-                sender,
-                recipient: nextRecipient,
-                amount: nextAmount
+
+            beforeEach(() => {
+                orgSignature = transaction.inputMap.signature;
+                orgSenderOutput = transaction.outputMap[sender.publicKey];
+                nextAmount = 25;
+                nextRecipient = 'Gustav';
+
+                transaction.update({
+                    sender,
+                    recipient: nextRecipient,
+                    amount: nextAmount,
+                });
+            });
+
+            it('should display the amount for the next recipient', () => {
+                expect(transaction.outputMap[nextRecipient]).toEqual(nextAmount);
+            });
+
+            it('should withdraw the amount from the original sender output balance', () => {
+                expect(transaction.outputMap[sender.publicKey]).toEqual(
+                    orgSenderOutput - nextAmount
+                );
+            });
+
+            it('should match the total output amount with the input amount', () => {
+                expect(
+                    Object.values(transaction.outputMap).reduce(
+                        (total, amount) => total + amount
+                    )
+                ).toEqual(transaction.inputMap.amount);
+            });
+
+            it('should create a new signature for the transaction', () => {
+                expect(orgSignature).not.toEqual(transaction.inputMap.signature);
             });
         });
     });
