@@ -5,7 +5,6 @@ export const mineBlock = (req, res, next) => {
     const { data } = req.body;
 
     const block = blockchain.addBlock({ data });
-    // Pubnub send this to all the nodes in the network.
 
     pubnubServer.broadcastChain();
 
