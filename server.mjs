@@ -1,8 +1,10 @@
 import express from 'express';
 import Blockchain from './models/Blockchain.mjs';
+import TransactionPool from './models/TransactionPool.mjs';
+import Wallet from './models/Wallet.mjs';
 import blockRouter from './routes/block-routes.mjs';
 import blockchainRouter from './routes/blockchain-routes.mjs';
-// import cors from 'cors';
+import transactionRouter from './routes/transaction-routes.mjs';
 import PubnubServer from './pubnubServer.mjs';
 import dotenv from 'dotenv';
 
@@ -16,8 +18,13 @@ const credentials = {
 };
 
 export const blockchain = new Blockchain();
+export const transactionPool = new TransactionPool();
+export const wallet = new Wallet();
 export const pubnubServer = new PubnubServer({
-    blockchain, credentials
+    blockchain,
+    credentials,
+    transactionPool,
+    wallet,
 });
 
 const app = express();
@@ -34,12 +41,12 @@ setTimeout(() => {
 
 app.use('/api/v1/blockchain', blockchainRouter);
 app.use('/api/v1/block', blockRouter);
+app.use('/api/v1/wallet', transactionRouter);
 
 const synchronize = async () => {
     const response = await fetch(`${ROOT_NODE}/api/v1/blockchain`);
     if (response.ok) {
         const result = await response.json();
-        console.log('SYNCHRONIZE', result.data);
         blockchain.replaceChain(result.data);
     }
 };
