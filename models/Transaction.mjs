@@ -8,23 +8,23 @@ export default class Transaction {
         this.inputMap = this.createInputMap({ sender, outputMap: this.outputMap });
     }
 
-    createOutputMap({ sender, recipient, amount }) {
-        const outputMap = {};
+    // createOutputMap({ sender, recipient, amount }) {
+    //     const outputMap = {};
 
-        outputMap[recipient] = amount;
-        outputMap[sender.publicKey] = sender.balance - amount;
+    //     outputMap[recipient] = amount;
+    //     outputMap[sender.publicKey] = sender.balance - amount;
 
-        return outputMap;
-    }
+    //     return outputMap;
+    // }
 
-    createInputMap({ sender, outputMap }) {
-        return {
-            timestamp: Date.now(),
-            amount: sender.balance,
-            address: sender.publicKey,
-            signature: sender.sign(outputMap),
-        };
-    }
+    // createInputMap({ sender, outputMap }) {
+    //     return {
+    //         timestamp: Date.now(),
+    //         amount: sender.balance,
+    //         address: sender.publicKey,
+    //         signature: sender.sign(outputMap),
+    //     };
+    // }
 
     // Static methods...
     static validate(transaction) {
@@ -59,7 +59,7 @@ export default class Transaction {
         this.inputMap = this.createInputMap({ sender, outputMap: this.outputMap });
     }
 
-    createMap({ sender, recipient, amount }) {
+    createOutputMap({ sender, recipient, amount }) {
         // Create an output map
         const outputMap = {};
 
@@ -69,7 +69,7 @@ export default class Transaction {
         return outputMap;
     }
 
-    createInput({ sender, outputMap }) {
+    createInputMap({ sender, outputMap }) {
         return {
             timestamp: Date.now(),
             amount: sender.balance,
