@@ -1,5 +1,5 @@
 export const MINE_RATE = 1000;// 1000 ms = 1 second
-export const INITIAL_BALANCE = 100;
+export const INITIAL_BALANCE = 1000;
 const INITIAL_DIFFICULTY = 3;
 
 export const GENESIS_DATA = {
