@@ -35,7 +35,9 @@ export default class PubnubServer {
             message: (msgObject) => {
                 const { channel, message } = msgObject;
                 const msg = JSON.parse(message);
-                console.log(`Message received. Channel: ${channel} Message: ${message}.`);
+                console.log(
+                    `Message received. Channel: ${channel} Message: ${message}.`
+                );
 
                 // If the message is a block, add it to the blockchain.
                 // if (channel === CHANNELS.BLOCKCHAIN) {
@@ -44,17 +46,23 @@ export default class PubnubServer {
                 // We replace the if statement with the following.
                 switch (channel) {
                     case CHANNELS.BLOCKCHAIN:
-                        this.blockchain.replaceChain(msg);
+                        this.blockchain.replaceChain(msg, () => {
+                            this.transactionPool.clearBlockchainTransactions({
+                                chain: msg,
+                            });
+                        });
                         break;
                     case CHANNELS.TRANSACTION:
-                        if (!this.transactionPool.existingTransaction({ address: this.wallet.publicKey, })
+                        if (
+                            !this.transactionPool.existingTransaction({
+                                address: this.wallet.publicKey,
+                            })
                         ) {
                             this.transactionPool.addTransaction(msg);
                         }
                         break;
                     default:
                         return;
-
                 }
             },
         };
