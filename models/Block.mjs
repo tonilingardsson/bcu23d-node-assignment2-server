@@ -1,6 +1,6 @@
-import hexToBinary from "hex-to-binary";
-import { GENESIS_DATA, MINE_RATE } from "../config/settings.mjs";
-import { createHash } from "../utilities/crypto-lib.mjs";
+import hexToBinary from 'hex-to-binary';
+import { GENESIS_DATA, MINE_RATE } from '../config/settings.mjs';
+import { createHash } from '../utilities/crypto-lib.mjs';
 
 export default class Block {
     constructor({ timestamp, lastHash, hash, data, nonce, difficulty }) {
@@ -29,9 +29,9 @@ export default class Block {
             timestamp = Date.now();
             difficulty = Block.adjustDifficultyLevel({ block: lastBlock, timestamp });
             hash = createHash(timestamp, lastHash, data, nonce, difficulty);
-        } while (hexToBinary(hash).substring(0, difficulty) !== '0'.repeat(difficulty));
-
-
+        } while (
+            hexToBinary(hash).substring(0, difficulty) !== '0'.repeat(difficulty)
+        );
 
         return new this({
             // This is dummy data.
@@ -40,8 +40,8 @@ export default class Block {
             hash,
             data,
             nonce,
-            difficulty
-        })
+            difficulty,
+        });
     }
 
     static adjustDifficultyLevel({ block, timestamp }) {
