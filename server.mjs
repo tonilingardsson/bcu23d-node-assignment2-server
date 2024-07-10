@@ -49,6 +49,12 @@ const synchronize = async () => {
         const result = await response.json();
         blockchain.replaceChain(result.data);
     }
+
+    response = await fetch(`${ROOT_NODE}/api/v1/wallet/transactions`);
+    if (response.ok) {
+        const result = await response.json();
+        transactionPool.replaceTransactionMap(result.data);
+    }
 };
 
 if (process.env.GENERATE_NODE_PORT === 'true') {
