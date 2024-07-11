@@ -1,5 +1,7 @@
+import { MINING_REWARD, REWARD_ADDRESS } from '../config/settings.mjs';
 import Block from '../models/Block.mjs';
 import { createHash } from '../utilities/crypto-lib.mjs';
+import Transaction from './Transaction.mjs';
 
 export default class Blockchain {
     constructor() {
@@ -7,7 +9,6 @@ export default class Blockchain {
     }
 
     // Instance method... Method that are on the object created in the blockchain class.
-    // In the blocks we have static methods which have direct access to the class, so we don't need to create an instance of the class.
     addBlock({ data }) {
         const newBlock = Block.mineBlock({
             lastBlock: this.chain.at(-1),
@@ -17,17 +18,43 @@ export default class Blockchain {
         return newBlock;
     }
 
-    replaceChain(chain, callback) {
-        // If the incoming chain is not longer than the current chain, return (nothing; no changes).
-        if (chain.length <= this.chain.length) return; // return nothing, no changes will be made
-
-        // If the incoming chain is longer, but not valid, return nothing.
+    replaceChain(chain, shouldValidate, callback) {
+        if (chain.length <= this.chain.length) return;
         if (!Blockchain.validateChain(chain)) return;
+
+        if (shouldValidate && !this.validateTransactionData({ chain })) return;
 
         if (callback) callback();
 
         // Is the incoming chain is longer and valid, replace the chain with it.
         this.chain = chain;
+    }
+
+    static validateTransactionData({ chain }) {
+        for (let i = 1; i < chain.length; i++) {
+            const block = chain[i];
+            const transactionSet = new Set();
+            let counter = 0;
+
+            for (let transaction of block.data) {
+                if (transaction.inputMap.address === REWARD_ADDRESS.address) {
+                    counter++;
+
+                    if (counter > 1) return false;
+
+                    if (Object.values(transaction.outputMap)[0] !== MINING_REWARD)
+                        return false;
+                } else {
+                    if (!Transaction.validate(transaction)) return false;
+                    if (transactionSet.has(transaction)) return false;
+                    else {
+                        transactionSet.add(transaction);
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 
     static validateChain(chain) {
