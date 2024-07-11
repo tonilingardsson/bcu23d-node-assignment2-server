@@ -19,7 +19,6 @@ export default class PubnubServer {
     broadcastChain() {
         this.publish({
             channel: CHANNELS.BLOCKCHAIN,
-            // Pubnub needs to receive a string, not an object (which is our blockchain).
             message: JSON.stringify(this.blockchain.chain),
         });
     }
@@ -39,11 +38,6 @@ export default class PubnubServer {
                     `Message received. Channel: ${channel} Message: ${message}.`
                 );
 
-                // If the message is a block, add it to the blockchain.
-                // if (channel === CHANNELS.BLOCKCHAIN) {
-                //     this.blockchain.replaceChain(msg);
-                // }
-                // We replace the if statement with the following.
                 switch (channel) {
                     case CHANNELS.BLOCKCHAIN:
                         this.blockchain.replaceChain(msg, true, () => {

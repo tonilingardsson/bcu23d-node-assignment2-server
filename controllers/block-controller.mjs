@@ -8,6 +8,6 @@ export const mineBlock = (req, res, next) => {
 
     pubnubServer.broadcastChain();
 
-    res.status(201).json({ status: 'success', statusCode: 201, data: block });
+    res.status(201).json({ status: true, statusCode: 201, data: block });
 
 };
