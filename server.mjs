@@ -1,4 +1,5 @@
 import express from 'express';
+import dotenv from 'dotenv';
 import Blockchain from './models/Blockchain.mjs';
 import TransactionPool from './models/TransactionPool.mjs';
 import Wallet from './models/Wallet.mjs';
@@ -6,7 +7,6 @@ import blockRouter from './routes/block-routes.mjs';
 import blockchainRouter from './routes/blockchain-routes.mjs';
 import transactionRouter from './routes/transaction-routes.mjs';
 import PubnubServer from './pubnubServer.mjs';
-import dotenv from 'dotenv';
 
 dotenv.config({ path: './config/config.env' });
 
@@ -44,7 +44,7 @@ app.use('/api/v1/block', blockRouter);
 app.use('/api/v1/wallet', transactionRouter);
 
 const synchronize = async () => {
-    const response = await fetch(`${ROOT_NODE}/api/v1/blockchain`);
+    let response = await fetch(`${ROOT_NODE}/api/v1/blockchain`);
     if (response.ok) {
         const result = await response.json();
         blockchain.replaceChain(result.data);
