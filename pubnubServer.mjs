@@ -46,7 +46,7 @@ export default class PubnubServer {
                 // We replace the if statement with the following.
                 switch (channel) {
                     case CHANNELS.BLOCKCHAIN:
-                        this.blockchain.replaceChain(msg, () => {
+                        this.blockchain.replaceChain(msg, true, () => {
                             this.transactionPool.clearBlockchainTransactions({
                                 chain: msg,
                             });
