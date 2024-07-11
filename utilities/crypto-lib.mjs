@@ -1,5 +1,4 @@
 import crypto from 'crypto';
-import { LOADIPHLPAPI } from 'dns';
 import pkg from 'elliptic';
 
 const { ec } = pkg;
