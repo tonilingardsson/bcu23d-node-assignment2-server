@@ -10,12 +10,12 @@ The transaction must be validated so that they follow the rules followed during 
 
 🌐 NETWORK
 
-1. [] It should be possible to **start up several nodes** with the blockchain.
-   **Synchronization** of the blockchain takes place **when**:
-2. [] **Starting a new node**,
-3. [] **Adding transactions**,
-4. [] A **block is created**.
-5. [] The technology for network communication must be either Redis, **Pubnub** or Websockets.
+1. [x] It should be possible to **start up several nodes** with the blockchain.
+       **Synchronization** of the blockchain takes place **when**:
+2. [x] **Starting a new node**,
+3. [x] **Adding transactions**,
+4. [x] A **block is created**.
+5. [x] The technology for network communication must be either Redis, **Pubnub** or Websockets.
 6. [] The block chain, blocks and transactions must be saved in a **mongodb** database.
 
 🛡 SECURITY 7. [] To be able to use a blockchain as a consumer, you must be registered and logged in. Here you must use **Json Web Token (JWT)** as technology to validate that a user is logged in and belongs to the correct role to be able to create a new transaction and to be able to list their own transactions and blocks. 8. 8. [] Users should be stored in a **mongodb document**.

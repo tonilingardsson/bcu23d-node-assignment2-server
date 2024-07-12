@@ -28,10 +28,13 @@
   "author": "Antonio Lingårdsson Luna",
   "license": "MIT",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
     "elliptic": "^6.5.5",
     "express": "^4.19.2",
     "hex-to-binary": "^1.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
     "pubnub": "^8.2.3",
     "uuid": "^9.0.1"
   },
