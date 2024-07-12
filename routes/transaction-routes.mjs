@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.route('/transaction').post(addTransaction);
 router.route('/transactions').get(getTransactionPool);
-router.route('/mine').post(mineTransactions);
+router.route('/mine').get(mineTransactions);
 router.route('/info').get(getWalletBalance);
 
 export default router;
