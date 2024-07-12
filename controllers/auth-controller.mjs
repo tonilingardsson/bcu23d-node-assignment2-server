@@ -1,4 +1,5 @@
 import User from "../models/UserModel.mjs";
+import { hashPassword } from "../utilities/security.mjs";
 // @desc    Register a user
 // @route   POST /api/v1/auth/register
 // @access  PUBLIC
