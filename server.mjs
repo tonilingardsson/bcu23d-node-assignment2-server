@@ -8,8 +8,15 @@ import blockRouter from './routes/block-routes.mjs';
 import blockchainRouter from './routes/blockchain-routes.mjs';
 import transactionRouter from './routes/transaction-routes.mjs';
 import PubnubServer from './pubnubServer.mjs';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config({ path: './config/config.env' });
+
+// Create a global __appdir that points to the directory where the application is running
+const filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(filename);
+global.__appdir = __dirname;
 
 const credentials = {
     publishKey: process.env.PUBLISH_KEY,

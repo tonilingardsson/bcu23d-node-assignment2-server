@@ -1,9 +1,10 @@
 import User from "../models/UserModel.mjs";
+import { saveUser } from "../data/fileDb.mjs";
 import { hashPassword } from "../utilities/security.mjs";
 // @desc    Register a user
 // @route   POST /api/v1/auth/register
 // @access  PUBLIC
-export const register = (req, res, next) => {
+export const register = async (req, res, next) => {
     const { name, email, password, role } = req.body;
 
     if (!name || !email || !password) {
@@ -17,6 +18,7 @@ export const register = (req, res, next) => {
     }
 
     const user = new User(name, email, password, role ?? 'user');
+    await saveUser(user);
     res
         .status(201)
         .json({ status: true, statusCode: 201, data: user });
