@@ -18,7 +18,7 @@ export const addTransaction = (req, res, next) => {
         if (transaction) {
             transaction.update({ sender: wallet, recipient, amount });
         } else {
-            transaction = wallet.createTransaction({ recipient, amount });
+            transaction = wallet.createTransaction({ recipient, amount, chain: blockchain.chain });
         }
     } catch (error) {
         return res
@@ -26,7 +26,7 @@ export const addTransaction = (req, res, next) => {
             .json({ success: false, statusCode: 400, error: error.message });
     }
 
-    transactionPool.addTransaction(transaction);
+    transactionPool.addTransaction({ transaction });
     pubnubServer.broadcastTransaction(transaction);
 
     res.status(201).json({ success: true, statusCode: 201, data: transaction });

@@ -5,6 +5,7 @@ export default class TransactionPool {
         this.transactionMap = {};
     }
     addTransaction({ transaction }) {
+        console.log(transaction);
         this.transactionMap[transaction.id] = transaction;
     }
 
@@ -40,9 +41,9 @@ export default class TransactionPool {
     }
 
     validateTransactions() {
-        const validTransactions = Object.values(this.transactionMap).filter(
+        const validateTransactions = Object.values(this.transactionMap).filter(
             (transaction) => Transaction.validate(transaction)
         );
-        return validTransactions;
+        return validateTransactions;
     }
 }

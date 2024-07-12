@@ -10,13 +10,13 @@ export default class Miner {
 
     mineTransaction() {
         // 1. Fetch all the valid transactions
-        const validTransactions = this.transactionPool.validTransactions();
+        const validateTransactions = this.transactionPool.validateTransactions();
         // 2. Create a reward transaction... NOT COMPLETELY OK YET
-        validTransactions.push(
+        validateTransactions.push(
             Transaction.transactionReward({ miner: this.wallet })
         );
         // 3. Add a block to the blockchain with the valid transactions and place it in the blockchain
-        this.blockchain.addBlock({ data: validTransactions });
+        this.blockchain.addBlock({ data: validateTransactions });
         // 4. Distribute the blockchain to all the nodes
         this.pubsub.broadcastChain();
         // 5. Clear the transaction pool
