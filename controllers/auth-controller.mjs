@@ -1,3 +1,4 @@
+import User from "../models/UserModel.mjs";
 // @desc    Register a user
 // @route   POST /api/v1/auth/register
 // @access  PUBLIC
@@ -13,9 +14,11 @@ export const register = (req, res, next) => {
                 error: 'Username, email or password missing!',
             });
     }
+
+    const user = new User(name, email, password, role ?? 'user');
     res
         .status(201)
-        .json({ status: true, statusCode: 201, data: 'Register success!' });
+        .json({ status: true, statusCode: 201, data: user });
 };
 
 // @desc    Login a user
