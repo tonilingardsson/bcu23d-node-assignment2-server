@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import authRouter from './routes/auth-routes.mjs';
 import Blockchain from './models/Blockchain.mjs';
 import TransactionPool from './models/TransactionPool.mjs';
 import Wallet from './models/Wallet.mjs';
@@ -28,7 +29,9 @@ export const pubnubServer = new PubnubServer({
 });
 
 const app = express();
+// Middleware
 app.use(express.json());
+app.use('/api/v1/auth', authRouter);
 
 const DEFAULT_PORT = 5001;
 const ROOT_NODE = `http://localhost:${DEFAULT_PORT}`;
