@@ -1,6 +1,6 @@
 import User from "../models/UserModel.mjs";
 import { saveUser } from "../data/fileDb.mjs";
-import { hashPassword } from "../utilities/security.mjs";
+import { generateToken } from "../utilities/security.mjs";
 // @desc    Register a user
 // @route   POST /api/v1/auth/register
 // @access  PUBLIC
@@ -18,10 +18,11 @@ export const register = async (req, res, next) => {
     }
 
     const user = new User(name, email, password, role ?? 'user');
+
+    // Save user to DB
     await saveUser(user);
-    res
-        .status(201)
-        .json({ status: true, statusCode: 201, data: user });
+
+    createAndSendToken(user.id, 201, res);
 };
 
 // @desc    Login a user
@@ -39,3 +40,23 @@ export const getMe = (req, res, next) => {
         .status(200)
         .json({ status: true, statusCode: 200, data: 'My profile works too!' });
 };
+
+const createAndSendToken = (id, statusCode, res) => {
+    // 1. Create token
+    const token = generateToken(id);
+    console.log(token);
+    // 2. Set options
+    const options = {
+        expires: new Date(
+            Date.now() + process.env.JWT_COOKIE_TTL * 24 * 60 * 60 * 1000
+        ),
+        httpOnly: true,
+    }
+    // 3. Send token
+    res.
+        status(statusCode).
+        // Sending token in a cookie
+        cookie('token', token, options).
+        // Sending token (as a response) in the body
+        json({ success: true, statusCode, token });
+}
