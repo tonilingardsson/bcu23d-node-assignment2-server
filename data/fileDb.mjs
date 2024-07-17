@@ -3,7 +3,7 @@ import { readFileAsync, writeFileAsync } from "../utilities/fileHandler.mjs";
 export const findUserByEmail = async (email) => {
     const users = await loadUsers();
     // Convert to lowercase []
-    const user = users.find(user => user.email === email);
+    const user = users.find((user) => user.email === email);
     if (!user) {
         throw new Error('User not found');
     }

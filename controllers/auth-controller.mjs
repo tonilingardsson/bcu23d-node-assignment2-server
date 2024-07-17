@@ -38,7 +38,7 @@ export const login = async (req, res, next) => {
         });
     }
     // 2. Fetch the user from the DB
-    const user = await findUserByEmail(email);
+    const user = await findUserByEmail({ email });
     // 3. Check if the password is correct
     const isCorrect = await validatePassword(password, user.password);
 
