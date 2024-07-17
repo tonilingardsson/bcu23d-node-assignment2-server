@@ -1,5 +1,5 @@
 import User from '../models/UserModel.mjs';
-import { saveUser, findUserByEmail } from '../data/fileDb.mjs';
+import { saveUser, findUserByEmail, findUserById } from '../data/fileDb.mjs';
 import { generateToken, validatePassword } from '../utilities/security.mjs';
 // @desc    Register a user
 // @route   POST /api/v1/auth/register
@@ -37,31 +37,41 @@ export const login = async (req, res, next) => {
             error: 'Email or password missing!',
         });
     }
-    // 2. Fetch the user from the DB
-    const user = await findUserByEmail({ email });
-    // 3. Check if the password is correct
-    const isCorrect = await validatePassword(password, user.password);
+    try {
+        // 2. Fetch the user from the DB
+        const user = await findUserByEmail({ email });
+        // 3. Check if the password is correct
+        const isCorrect = await validatePassword(password, user.password);
 
-    if (!isCorrect) {
-        return res
-            .status(401)
-            .json({
+        if (!isCorrect) {
+            return res.status(401).json({
                 success: false,
                 statusCode: 401,
                 message: 'Invalid credentials!',
             });
+        }
+        // 4. Generate a new token and send it back
+        return createAndSendToken(user.id, 200, res);
+    } catch (error) {
+        res
+            .status(404)
+            .json({ success: false, statusCode: 404, message: error.message });
     }
-    // 4. Generate a new token and send it back
-    createAndSendToken(user.id, 200, res);
 };
 
 // @desc    Return info about a logged in user
 // @route   GET /api/v1/auth/me
 // @access  PUBLIC
-export const getMe = (req, res, next) => {
-    res
-        .status(200)
-        .json({ status: true, statusCode: 200, data: 'My profile works too!' });
+export const getMe = async (req, res, next) => {
+    try {
+        const user = await findUserById(req.id);
+    } catch (error) {
+        return res
+            .status(404)
+            .json({ success: false, statusCode: 404, message: error.message });
+    }
+
+    res.status(200).json({ status: true, statusCode: 200, data: user });
 };
 
 const createAndSendToken = (id, statusCode, res) => {
