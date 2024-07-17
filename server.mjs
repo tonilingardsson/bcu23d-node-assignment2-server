@@ -1,15 +1,20 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import authRouter from './routes/auth-routes.mjs';
 import Blockchain from './models/Blockchain.mjs';
 import TransactionPool from './models/TransactionPool.mjs';
 import Wallet from './models/Wallet.mjs';
-import blockRouter from './routes/block-routes.mjs';
-import blockchainRouter from './routes/blockchain-routes.mjs';
-import transactionRouter from './routes/transaction-routes.mjs';
+
 import PubnubServer from './pubnubServer.mjs';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
+
+// Routes
+import authRouter from './routes/auth-routes.mjs';
+import blockRouter from './routes/block-routes.mjs';
+import blockchainRouter from './routes/blockchain-routes.mjs';
+import transactionRouter from './routes/transaction-routes.mjs';
+// To implement after authorization issues are solved
+// import coursesRouter from './routes/courses-routes.mjs';
 
 dotenv.config({ path: './config/config.env' });
 
@@ -38,7 +43,6 @@ export const pubnubServer = new PubnubServer({
 const app = express();
 // Middleware
 app.use(express.json());
-app.use('/api/v1/auth', authRouter);
 
 const DEFAULT_PORT = 5001;
 const ROOT_NODE = `http://localhost:${DEFAULT_PORT}`;
@@ -52,6 +56,10 @@ setTimeout(() => {
 app.use('/api/v1/blockchain', blockchainRouter);
 app.use('/api/v1/block', blockRouter);
 app.use('/api/v1/wallet', transactionRouter);
+app.use('/api/v1/auth', authRouter);
+// To implement after authorization issues are solved
+// app.use('/api/v1/courses', coursesRouter);
+
 
 // const synchronize = async () => {
 //     const response = await fetch(`${ROOT_NODE}/api/v1/blockchain`);

@@ -1,6 +1,6 @@
-import User from "../models/UserModel.mjs";
-import { saveUser } from "../data/fileDb.mjs";
-import { generateToken } from "../utilities/security.mjs";
+import User from '../models/UserModel.mjs';
+import { saveUser, findUserByEmail } from '../data/fileDb.mjs';
+import { generateToken, validatePassword } from '../utilities/security.mjs';
 // @desc    Register a user
 // @route   POST /api/v1/auth/register
 // @access  PUBLIC
@@ -8,13 +8,11 @@ export const register = async (req, res, next) => {
     const { name, email, password, role } = req.body;
 
     if (!name || !email || !password) {
-        return res
-            .status(400)
-            .json({
-                status: false,
-                statusCode: 400,
-                error: 'Username, email or password missing!',
-            });
+        return res.status(400).json({
+            status: false,
+            statusCode: 400,
+            error: 'Username, email or password missing!',
+        });
     }
 
     const user = new User(name, email, password, role ?? 'user');
@@ -28,8 +26,33 @@ export const register = async (req, res, next) => {
 // @desc    Login a user
 // @route   POST /api/v1/auth/login
 // @access  PUBLIC
-export const login = (req, res, next) => {
-    res.status(200).json({ status: true, statusCode: 200, data: 'Login works!' });
+export const login = async (req, res, next) => {
+    // 1. Validate that we have email and password
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({
+            success: false,
+            statusCode: 400,
+            error: 'Email or password missing!',
+        });
+    }
+    // 2. Fetch the user from the DB
+    const user = await findUserByEmail(email);
+    // 3. Check if the password is correct
+    const isCorrect = await validatePassword(password, user.password);
+
+    if (!isCorrect) {
+        return res
+            .status(401)
+            .json({
+                success: false,
+                statusCode: 401,
+                message: 'Invalid credentials!',
+            });
+    }
+    // 4. Generate a new token and send it back
+    createAndSendToken(user.id, 200, res);
 };
 
 // @desc    Return info about a logged in user
@@ -51,12 +74,12 @@ const createAndSendToken = (id, statusCode, res) => {
             Date.now() + process.env.JWT_COOKIE_TTL * 24 * 60 * 60 * 1000
         ),
         httpOnly: true,
-    }
+    };
     // 3. Send token
-    res.
-        status(statusCode).
+    res
+        .status(statusCode)
         // Sending token in a cookie
-        cookie('token', token, options).
+        .cookie('token', token, options)
         // Sending token (as a response) in the body
-        json({ success: true, statusCode, token });
-}
+        .json({ success: true, statusCode, token });
+};
