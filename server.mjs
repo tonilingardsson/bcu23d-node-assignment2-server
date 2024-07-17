@@ -13,6 +13,7 @@ import authRouter from './routes/auth-routes.mjs';
 import blockRouter from './routes/block-routes.mjs';
 import blockchainRouter from './routes/blockchain-routes.mjs';
 import transactionRouter from './routes/transaction-routes.mjs';
+import { errorHandler } from './middleware/errorHandler.mjs';
 // To implement after authorization issues are solved
 // import coursesRouter from './routes/courses-routes.mjs';
 
@@ -59,6 +60,8 @@ app.use('/api/v1/wallet', transactionRouter);
 app.use('/api/v1/auth', authRouter);
 // To implement after authorization issues are solved
 // app.use('/api/v1/courses', coursesRouter);
+
+app.use(errorHandler);
 
 
 // const synchronize = async () => {
