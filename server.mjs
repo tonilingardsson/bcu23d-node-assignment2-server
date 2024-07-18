@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+
 import Blockchain from './models/Blockchain.mjs';
 import TransactionPool from './models/TransactionPool.mjs';
 import Wallet from './models/Wallet.mjs';
@@ -15,7 +16,7 @@ import blockchainRouter from './routes/blockchain-routes.mjs';
 import transactionRouter from './routes/transaction-routes.mjs';
 import { errorHandler } from './middleware/errorHandler.mjs';
 // To implement after authorization issues are solved
-// import coursesRouter from './routes/courses-routes.mjs';
+import coursesRouter from './routes/courses-routes.mjs';
 
 dotenv.config({ path: './config/config.env' });
 
@@ -58,8 +59,7 @@ app.use('/api/v1/blockchain', blockchainRouter);
 app.use('/api/v1/block', blockRouter);
 app.use('/api/v1/wallet', transactionRouter);
 app.use('/api/v1/auth', authRouter);
-// To implement after authorization issues are solved
-// app.use('/api/v1/courses', coursesRouter);
+app.use('/api/v1/courses', coursesRouter);
 
 app.use(errorHandler);
 
