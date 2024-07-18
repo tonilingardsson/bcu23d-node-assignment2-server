@@ -8,11 +8,7 @@ export const register = async (req, res, next) => {
     const { name, email, password, role } = req.body;
 
     if (!name || !email || !password) {
-        return res.status(400).json({
-            status: false,
-            statusCode: 400,
-            error: 'Username, email or password missing!',
-        });
+        return next(new Error('Name, email and password are required!'));
     }
 
     const user = new User(name, email, password, role ?? 'user');
