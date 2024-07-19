@@ -1,90 +1,131 @@
 import User from '../models/UserModel.mjs';
-import { saveUser, findUserByEmail, findUserById } from '../data/fileDb.mjs';
-import { generateToken, validatePassword } from '../utilities/security.mjs';
+import ErrorResponse from '../models/ErrorResponseModel.mjs';
+import { asyncHandler } from '../middleware/asyncHandler.mjs';
+
 // @desc    Register a user
 // @route   POST /api/v1/auth/register
 // @access  PUBLIC
-export const register = async (req, res, next) => {
+export const register = asyncHandler(async (req, res, next) => {
     const { name, email, password, role } = req.body;
 
-    if (!name || !email || !password) {
-        return next(new Error('Name, email and password are required!'));
-    }
-
-    const user = new User(name, email, password, role ?? 'user');
-
-    // Save user to DB
-    await saveUser(user);
+    const user = await User.create({ name, email, password, role });
 
     createAndSendToken(user.id, 201, res);
-};
+});
 
 // @desc    Login a user
 // @route   POST /api/v1/auth/login
 // @access  PUBLIC
-export const login = async (req, res, next) => {
-    // 1. Validate that we have email and password
+export const login = asyncHandler(async (req, res, next) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-        return res.status(400).json({
-            success: false,
-            statusCode: 400,
-            error: 'Email or password missing!',
-        });
+        return next(new ErrorResponse('Please provide an email and password', 400));
     }
-    try {
-        // 2. Fetch the user from the DB
-        const user = await findUserByEmail({ email });
-        // 3. Check if the password is correct
-        const isCorrect = await validatePassword(password, user.password);
 
-        if (!isCorrect) {
-            return res.status(401).json({
-                success: false,
-                statusCode: 401,
-                message: 'Invalid credentials!',
-            });
-        }
-        // 4. Generate a new token and send it back
-        return createAndSendToken(user.id, 200, res);
-    } catch (error) {
-        res
-            .status(404)
-            .json({ success: false, statusCode: 404, message: error.message });
+    const user = await User.findOne({ email }).select('+password');
+
+    if (!user) {
+        return next(new ErrorResponse('Invalid credentials', 401));
     }
-};
+
+    const isCorrect = await user.validatePassword(password);
+    if (!isCorrect) {
+        return next(new ErrorResponse('Invalid credentials', 401));
+    }
+
+    createAndSendToken(user.id, 200, res);
+});
 
 // @desc    Return info about a logged in user
 // @route   GET /api/v1/auth/me
-// @access  PUBLIC
+// @access  PRIVATE
 export const getMe = async (req, res, next) => {
-    try {
-        const user = await findUserById(req.id);
-    } catch (error) {
-        return res
-            .status(404)
-            .json({ success: false, statusCode: 404, message: error.message });
-    }
-
-    res.status(200).json({ status: true, statusCode: 200, data: user });
+    const user = await User.findById(req.user.id).populate('transactions');
+    res.status(200).json({
+        status: true,
+        statusCode: 200,
+        data: user
+    });
 };
 
-const createAndSendToken = (id, statusCode, res) => {
-    // 1. Create token
-    const token = generateToken(id);
-    console.log(token);
-    // 2. Set options
+// @desc    Update a user
+// @route   PUT /api/v1/auth/:id
+// @access  PRIVATE
+export const updateUser = asyncHandler(async (req, res, next) => {
+    const fieldsToUpdate = {
+        name: req.body.name,
+        email: req.body.email
+    };
+    const user = await User.findByIdAndUpdate(req.user.id, fieldsToUpdate, {
+        new: true,
+        runValidators: true,
+    });
+    res.status(200).json({
+        status: true,
+        statusCode: 200,
+        data: user
+    });
+});
+
+// @desc    Forgot password
+// @route   GET /api/v1/auth/forgotpassword
+// @access  PUBLIC
+export const forgotPassword = asyncHandler(async (req, res, next) => {
+    const email = req.body.email;
+
+    if (!email) {
+        return next(new ErrorResponse('Please provide an email', 400));
+    }
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+        return next(new ErrorResponse(`There is no user with that email: ${email}`, 404));
+    };
+
+    const resetToken = user.createAndSendToken();
+    await user.saveUser({ validateBeforeSave: false });
+
+    const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/auth/resetpassword/${resetToken}`;
+
+    res.status(200).json({
+        success: true,
+        statusCode: 200,
+        data: { token: resetToken, url: resetUrl }
+    })
+});
+
+// @desc    Reset password
+// @route   PUT /api/v1/auth/resetpassword/:token
+// @access  PUBLIC
+export const resetPassword = asyncHandler(async (req, res, next) => {
+    const password = req.body.password;
+    const token = req.params.token;
+
+    if (!password) return next(new ErrorResponse('Please provide a password', 400));
+
+    let user = await User.findOne({ resetPasswordToken: token });
+
+    user.password = password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordTokenExpire = undefined;
+
+    await user.saveUser();
+
+    createAndSendToken(user, 200, res);
+});
+
+const createAndSendToken = (user, statusCode, res) => {
+    const token = generateToken(user);
     const options = {
         expires: new Date(
             Date.now() + process.env.JWT_COOKIE_TTL * 24 * 60 * 60 * 1000
         ),
         httpOnly: true,
     };
-    // 3. Send token
     res
         .status(statusCode)
-        // Sending token in a cookie
         .cookie('token', token, options)
         // Sending token (as a response) in the body
         .json({ success: true, statusCode, token });
