@@ -1,6 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
-
+import { connectDb } from './config/mongo.mjs';
 import Blockchain from './models/Blockchain.mjs';
 import TransactionPool from './models/TransactionPool.mjs';
 import Wallet from './models/Wallet.mjs';
@@ -8,17 +8,19 @@ import Wallet from './models/Wallet.mjs';
 import PubnubServer from './pubnubServer.mjs';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { errorHandler } from './middleware/errorHandler.mjs';
+
 
 // Routes
 import authRouter from './routes/auth-routes.mjs';
 import blockRouter from './routes/block-routes.mjs';
 import blockchainRouter from './routes/blockchain-routes.mjs';
 import transactionRouter from './routes/transaction-routes.mjs';
-import { errorHandler } from './middleware/errorHandler.mjs';
-// To implement after authorization issues are solved
-import coursesRouter from './routes/courses-routes.mjs';
 
 dotenv.config({ path: './config/config.env' });
+
+// Connect to MongoDB
+connectDb();
 
 // Create a global __appdir that points to the directory where the application is running
 const filename = fileURLToPath(import.meta.url);
@@ -59,7 +61,6 @@ app.use('/api/v1/blockchain', blockchainRouter);
 app.use('/api/v1/block', blockRouter);
 app.use('/api/v1/wallet', transactionRouter);
 app.use('/api/v1/auth', authRouter);
-app.use('/api/v1/courses', coursesRouter);
 
 app.use(errorHandler);
 
