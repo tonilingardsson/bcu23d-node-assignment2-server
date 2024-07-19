@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import User from '../models/UserModel.mjs';
 import { asyncHandler } from './asyncHandler.mjs';
 import ErrorResponse from '../models/ErrorResponseModel.mjs';
 
@@ -30,4 +31,18 @@ export const protect = asyncHandler((req, res, next) => {
         next(new ErrorResponse('Not authorized!', 401));
     }
     next();
-})
+});
+
+// Authorize roles: admin, user, manager
+export const authorize = (...roles) => {
+    return (req, res, next) => {
+        if (!roles.includes(req.user.role)) {
+            return res.status(403).json({
+                success: false,
+                statusCode: 403,
+                message: `The role ${req.user.role} has no authorization`
+            })
+        }
+        next();
+    };
+};
