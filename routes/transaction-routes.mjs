@@ -5,12 +5,19 @@ import {
     getWalletBalance,
     mineTransactions,
 } from '../controllers/transaction-controller.mjs';
+import { authorize, protect } from '../middleware/authorization.mjs';
 
-const router = express.Router();
+const transactionRouter = express.Router();
 
-router.route('/transaction').post(addTransaction);
-router.route('/transactions').get(getTransactionPool);
-router.route('/mine').get(mineTransactions);
-router.route('/info').get(getWalletBalance);
+transactionRouter.use(protect);
 
-export default router;
+transactionRouter.route('/').get(getTransactionPool);
+transactionRouter.route('/wallet').get(getWalletBalance);
+
+
+transactionRouter.use(authorize('admin', 'manager'));
+
+transactionRouter.route('/transaction').post(addTransaction);
+transactionRouter.route('/mine').get(mineTransactions);
+
+export default transactionRouter;

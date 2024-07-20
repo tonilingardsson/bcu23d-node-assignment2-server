@@ -18,7 +18,7 @@ The transaction must be validated so that they follow the rules followed during 
 5. [x] The technology for network communication must be either Redis, **Pubnub** or Websockets.
 6. [] The block chain, blocks and transactions must be saved in a **mongodb** database.
 
-🛡 SECURITY 7. [x] To be able to use a blockchain as a consumer, you must be registered and logged in. Here you must use **Json Web Token (JWT)** as technology to validate that a user is logged in and belongs to the correct role to be able to create a new transaction and to be able to list their own transactions and blocks. 8. [] Users should be stored in a **mongodb document**.
+🛡 SECURITY 7. [x] To be able to use a blockchain as a consumer, you must be registered and logged in. Here you must use **Json Web Token (JWT)** as technology to validate that a user is logged in and belongs to the correct role to be able to create a new transaction and to be able to list their own transactions and blocks. 8. [x] Users should be stored in a **mongodb document**.
 
 📱 CLIENT 9. [x] A **client** must be developed in either **React with Vite** or a purely JavaScript application with HTML and CSS.
 The client application must be able to: 10. [] **Create new transactions**, 11. [] **List transactions**, and 12. [] **List blocks**. 13. [] In addition, it must be possible to **create a block of transactions**, i.e. "**mine**" of blocks.
