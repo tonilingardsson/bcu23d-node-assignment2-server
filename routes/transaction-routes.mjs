@@ -15,7 +15,7 @@ transactionRouter.route('/').get(getTransactionPool);
 transactionRouter.route('/wallet').get(getWalletBalance);
 
 
-transactionRouter.use(authorize('admin', 'manager'));
+transactionRouter.use(authorize('admin', 'manager', 'user'));
 
 transactionRouter.route('/transaction').post(addTransaction);
 transactionRouter.route('/mine').get(mineTransactions);
