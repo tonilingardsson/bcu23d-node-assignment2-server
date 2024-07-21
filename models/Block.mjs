@@ -49,7 +49,7 @@ export default class Block {
         const { difficulty } = block;
 
         if (timestamp - block.timestamp > MINE_RATE) {
-            return difficulty - 1;
+            return difficulty !== 1 ? difficulty - 1 : 1;
         }
         return difficulty + 1;
     }
