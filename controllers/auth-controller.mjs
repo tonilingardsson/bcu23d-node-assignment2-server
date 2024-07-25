@@ -34,7 +34,7 @@ export const login = asyncHandler(async (req, res, next) => {
         return next(new ErrorResponse('Invalid credentials', 401));
     }
 
-    createAndSendToken(user.id, 200, res);
+    createAndSendToken(user, 200, res);
 });
 
 // @desc    Return info about a logged in user
@@ -117,7 +117,7 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
 });
 
 const createAndSendToken = (user, statusCode, res) => {
-    const token = generateToken(user);
+    const token = user.generateToken();
     const options = {
         expires: new Date(
             Date.now() + process.env.JWT_COOKIE_TTL * 24 * 60 * 60 * 1000
