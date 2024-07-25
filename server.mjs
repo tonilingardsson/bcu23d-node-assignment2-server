@@ -9,6 +9,7 @@ import PubnubServer from './pubnubServer.mjs';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { errorHandler } from './middleware/errorHandler.mjs';
+import cors from 'cors';
 
 
 // Routes
@@ -47,6 +48,7 @@ export const pubnubServer = new PubnubServer({
 const app = express();
 // Middleware
 app.use(express.json());
+app.use(cors());
 
 const DEFAULT_PORT = 5001;
 const ROOT_NODE = `http://localhost:${DEFAULT_PORT}`;
@@ -59,7 +61,7 @@ setTimeout(() => {
 
 app.use('/api/v1/blockchain', blockchainRouter);
 app.use('/api/v1/block', blockRouter);
-app.use('/api/v1/wallet', transactionRouter);
+app.use('/api/v1/transactions', transactionRouter);
 app.use('/api/v1/auth', authRouter);
 
 app.use(errorHandler);
