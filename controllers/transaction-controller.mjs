@@ -68,6 +68,6 @@ export const mineTransactions = (req, res, next) => {
         .json({
             success: true,
             statusCode: 200,
-            data: 'It works quite decent for now!',
+            data: blockchain.chain.at(-1),
         });
 };
