@@ -4,7 +4,7 @@ import { asyncHandler } from './asyncHandler.mjs';
 import ErrorResponse from '../models/ErrorResponseModel.mjs';
 
 // Requires the user to be authenticated
-export const protect = asyncHandler((req, res, next) => {
+export const protect = asyncHandler(async (req, res, next) => {
     let token;
 
     if (
@@ -25,7 +25,7 @@ export const protect = asyncHandler((req, res, next) => {
 
     // Verify token
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = User.findById(decodedToken.id);
+    req.user = await User.findById(decodedToken.id);
 
     if (!req.user) {
         next(new ErrorResponse('Not authorized!', 401));
